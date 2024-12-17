@@ -1,79 +1,208 @@
+# **Generate Realistic Human Face using GAN**
 
+## **Project Information**
+- **Authors**: Hariharan Mohan, Kyaw Kyaw Oo, Faizan Parabtani  
+- **Group No**: 5  
+- **Date of Submission**: Nov 28, 2024  
+- **Lecturers**:  
+  - Dr. Alireza Fatehi  
+  - Dr. Amir Pourhajiaghashafti  
 
-## SEP 769 Part 2 of Project - Generate Realistic Human Face using GAN  <br>
+**CopyRight © 2024 by Group 5 of SEP 769 Part 2**
 
-Authors			    :	Kyaw Kyaw Oo, Hariharan Mohan, Faizan Parabtani<br>
-Student Numbers	    : 	400551761, 400608376, 400489257<br>
-Group No			:   5	<br>
-Date of Submission	: 	Nov 28, 2024<br>
-Lecturer			:	Dr. Alireza Fatehi <br>
-                        Dr. Amir Pourhajiaghashafti <br>
+---
 
-CopyRight@2024 by Group 5 of SEP 769 Part 2<br>
+## **Overview**
+The purpose of this project is to build a **Generative Adversarial Network (GAN)** that generates realistic human face images using the **CelebA dataset**. The GAN model comprises:  
+- **Generator**: Produces synthetic face images.  
+- **Discriminator**: Differentiates between real and synthetic images.
 
-# Generate Realistic Human Face using GAN 
+    <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/Architecture.jpg" width="500">
+    </p>
 
-## Overview
-The goal of this project is to build a generative model, in particular a GAN to create images of faces using the CelebA dataset that contains more than twenty thousand face images of celebrities with their attributes. To achieve this, the primary objective is to train the GAN to generate realistic-style images which are then realistically photorealistic with a focus on the realistic style portrayal of human faces in any conceivable emotion. GAN mainly includes a generator that generates synthetic image set and a discriminator that evaluates their authenticity. The generator enhances image production while the discriminator enhances the identification ability between the real image and the synthetic images during the Adversarial training. To evaluate the qualities of generated images, two indices, Inception Score (IS) and Fréchet Inception Distance (FID) will be used. Further experiments will focus on other attributes and features of the face including additional possible expressions to further demonstrate the versatility of the GAN synthesizing capability. This project facilitates the development of the existing field of generative modeling as it proves that GANs are efficient in the generation of high fidelity faces and assesses some of the capabilities of the network for mimicking intricate human features. 
+By training the GAN on thousands of celebrity face images, the generator learns to produce photorealistic faces. The quality of generated images is evaluated using **Inception Score (IS)** and **Fréchet Inception Distance (FID)**.
 
-## Prerequisites
-- Python 3.9.6+
-- Jupyter Notebook
-- Celebe Dataset - https://www.kaggle.com/datasets/jessicali9530/celeba-dataset
-- pip (Python package installer)
+---
 
-## Installation
+## **Prerequisites**
 
-1. # Clearing the unnecessary packages due to the dependency issues
-%pip uninstall keras tensorflow tensorflow-addons -y
+Ensure you have the following installed on your system:  
+- **Python 3.9.6+**  
+- **Jupyter Notebook**  
+- **TensorFlow** and associated libraries  
+- **CelebA Dataset**: [Download here](https://www.kaggle.com/datasets/jessicali9530/celeba-dataset)  
+- **pip** (Python package installer)  
 
-%pip install tensorflow scipy numpy pillow
-%pip install pydot graphviz
-%pip install --upgrade pydot
+---
 
-2. Create local directories of real_images where to save and selected images only due to the constraint of the computation and generated_images
+## **Installation**
 
-# Global Variables
-# Constants
-Real_Images_DIR = current_directory + '/Data/Images'
-IMAGES_COUNT = 100   # Adjust based on available data due to the computational constraints in our local machine
-WIDTH = 64           # Image width after resizing
-HEIGHT = 64          # Image height after resizing
-LATENT_DIM = 32      # Latent dimension for GAN
-CHANNELS = 3         # Number of channels (RGB)
-CONTROL_SIZE_SQRT = 6
-RES_DIR = 'res2'
-FILE_PATH = '%s/generated_%d.png'
+Follow these steps to set up and run the project:  
 
-# Predefined Modules
-oad_images_from_folder
-preprocess_image
-extract_features
-get_real_features
-generate_images
-get_generated_features
-display_images
-create_generator
-create_discriminator
-create_gan
-train_gan_classification
-save_images_to_directory
+1. **Uninstall Conflicting Packages**  
 
-## Visualization
-plot_losses
+   ```bash
+   %pip uninstall keras tensorflow tensorflow-addons -y
+  
+3. **Install Required Libraries**
 
-## Metrics
-inception_score
-calculate_fid
+   ```bash
+    %pip install tensorflow scipy numpy pillow
+    %pip install pydot graphviz --upgrade
 
-## Testing 
-real_images
-generator
-discriminator
-gan
-generated_features
-d_losses, a_losses, classification_df
-generated_fake_images
-inceptfid_score
-ion_score_value
-precision, recall
+4. **Create Project Directories**
+
+    ```python
+    import os
+    
+    current_directory = os.getcwd()
+    Real_Images_DIR = current_directory + '/Data/Images'
+    Generated_Images_DIR = current_directory + '/generated_images'
+    os.makedirs(Real_Images_DIR, exist_ok=True)
+    os.makedirs(Generated_Images_DIR, exist_ok=True)
+
+5. Global Configuration
+    
+    ```python
+    # Configuration Parameters
+    IMAGES_COUNT = 100      # Adjust dataset size based on resources
+    WIDTH = 64              # Image width (resized)
+    HEIGHT = 64             # Image height (resized)
+    LATENT_DIM = 32         # Latent dimension for the generator input
+    CHANNELS = 3            # RGB color channels
+    CONTROL_SIZE_SQRT = 6   # Grid size for visualization
+    RES_DIR = 'res2'        # Directory to save results
+    FILE_PATH = '%s/generated_%d.png'
+
+---
+
+## **Modules and Functions**
+
+1. Dataset and Preprocessing
+    - load_images_from_folder: Load images from the dataset directory.
+    - preprocess_image: Resize and normalize images for training.
+    - extract_features and get_real_features: Feature extraction functions for real images.
+
+2. GAN Components
+    - create_generator: Builds the generator network.
+    - create_discriminator: Defines the discriminator network.
+    - create_gan: Combines generator and discriminator models for adversarial training.
+    - train_gan_classification: Trains the GAN on the dataset.
+  
+   <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/FlowImage.png" width="500">
+    </p>
+
+3. Visualization
+    - display_images: Display generated and real images side-by-side.
+    - plot_losses: Visualize generator and discriminator losses over training epochs.
+
+4. Evaluation Metrics
+    -inception_score: Measures image diversity and realism.
+    - calculate_fid: Computes Fréchet Inception Distance (FID) to assess image quality.
+
+---
+
+## **How to Run the Project**
+
+1. Train the GAN Model
+  
+    ```python
+    d_losses, g_losses = train_gan_classification(generator, discriminator, epochs=100)
+
+  <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/GeneratorParameters.png" width="500">
+  </p>
+
+2. Generate and Display Images using the generator to create synthetic faces:
+
+    ```python
+    generated_images = generate_images(generator, LATENT_DIM)
+    display_images(real_images, generated_images)
+
+  <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/DiscriminatorParameters.png" width="500">
+  </p>
+
+3. Evaluate the Results
+  Compute IS and FID scores for generated images:
+
+    ```python
+    IS = inception_score(generated_images)
+    FID = calculate_fid(real_images, generated_images)
+    print(f"Inception Score: {IS}, FID: {FID}")
+
+---
+
+## **Visualization**
+1. Example Outputs
+
+   <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/SampleImages.png" width="800">
+    </p>
+3. Generated Faces
+
+   <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/anim.gif" width="500">
+    </p>
+
+5. Training Loss Plot
+
+    <p align="center">
+      <img src="https://github.com/Hari10513/GenerateRealisticHumanFace/blob/main/Images/Results.png" width="500">
+    </p>
+
+---
+## **Evaluation Results**
+
+After training the GAN model and generating synthetic faces, the following evaluation metrics were computed:
+
+| **Metric**                         | **Value**  |
+|------------------------------------|------------|
+| **Inception Score (IS)**           | 1.2379     |
+| **Fréchet Inception Distance (FID)** | 3.3769     |
+| **Precision**                      | 0.0496     |
+| **Recall**                         | 0.0471     |
+| **Kernel Inception Distance (KID)** | 0.0125     |
+
+---
+
+## **Metrics Interpretation:**
+
+- **Inception Score (IS)**: A value of **1.2379** indicates moderate diversity and realism, but there’s still room for improvement.
+- **Fréchet Inception Distance (FID)**: The value of **3.3769** suggests that the generated images are relatively close to the real images, but fine-tuning is necessary for better performance.
+- **Precision**: A precision value of **0.0496** indicates that a small portion of the generated data aligns with the real data distribution.
+- **Recall**: The recall value of **0.0471** shows that the generator has limited coverage of the real data.
+- **Kernel Inception Distance (KID)**: A **0.0125** KID score is relatively low, indicating good alignment between the real and generated data distributions.
+
+---
+
+## **Future Enhancements**
+- Train the model for higher-resolution image generation (e.g., 256x256).
+- Integrate Conditional GANs (cGANs) to generate faces with specific attributes.
+- Optimize training performance for larger datasets.
+- Explore additional evaluation metrics like LPIPS for perceptual similarity.
+
+---
+
+## **Contributors**
+- Hariharan Mohan
+- Kyaw Kyaw Oo
+- Faizan Parabtani
+
+---
+
+## **License**
+
+**© 2024 Group 5 of SEP 769 Part 2. All rights reserved.**
+
+---
+
+## **Contact**
+For inquiries, please reach out via:
+
+- Email: hariharan10513@gmail.com
+- GitHub Repository: https://github.com/Hari10513
+
+---
